@@ -29,10 +29,10 @@ msg_ok "Installed Dependencies"
 
 msg_info "Updating Python3"
 $STD apt-get install -y \
-  python3 \
   python3-dev \
   python3-pip
 $STD apt-get install -y python3-setuptools
+rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED
 msg_ok "Updated Python3"
 
 msg_info "Installing SABnzbd"
@@ -41,6 +41,7 @@ $STD tar zxvf <(curl -fsSL https://github.com/sabnzbd/sabnzbd/releases/download/
 mv SABnzbd-${RELEASE} /opt/sabnzbd
 cd /opt/sabnzbd
 $STD python3 -m pip install -r requirements.txt
+echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
 msg_ok "Installed SABnzbd"
 
 msg_info "Creating Service"
@@ -62,6 +63,6 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-$STD apt-get autoremove
-$STD apt-get autoclean
+$STD apt-get -y autoremove
+$STD apt-get -y autoclean
 msg_ok "Cleaned"

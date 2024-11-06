@@ -42,7 +42,7 @@ msg_ok "Cloned Linkwarden Repository"
 msg_info "Setting up PostgreSQL DB"
 DB_NAME=linkwardendb
 DB_USER=linkwarden
-DB_PASS="$(openssl rand -base64 18 | cut -c1-13)"
+DB_PASS="$(openssl rand -base64 18 | tr -d '/' | cut -c1-13)"
 $STD sudo -u postgres psql -c "CREATE ROLE $DB_USER WITH LOGIN PASSWORD '$DB_PASS';"
 $STD sudo -u postgres psql -c "CREATE DATABASE $DB_NAME WITH OWNER $DB_USER TEMPLATE template0;"
 
@@ -74,6 +74,7 @@ RELEASE=$(curl -s https://api.github.com/repos/linkwarden/linkwarden/releases/la
 echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
 $STD yarn
 $STD npx playwright install-deps
+$STD yarn playwright install
 IP=$(hostname -I | awk '{print $1}')
 SECRET_KEY="$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 32)"
 env_path="/opt/linkwarden/.env"
@@ -107,6 +108,6 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-$STD apt-get autoremove
-$STD apt-get autoclean
+$STD apt-get -y autoremove
+$STD apt-get -y autoclean
 msg_ok "Cleaned"

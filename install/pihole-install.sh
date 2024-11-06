@@ -49,7 +49,7 @@ if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
   cat <<EOF >/etc/unbound/unbound.conf.d/pi-hole.conf
 server:
   verbosity: 0
-  interface: 0.0.0.0
+  interface: 127.0.0.1
   port: 5335
   do-ip6: no
   do-ip4: yes
@@ -105,6 +105,6 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-$STD apt-get autoremove
-$STD apt-get autoclean
+$STD apt-get -y autoremove
+$STD apt-get -y autoclean
 msg_ok "Cleaned"
